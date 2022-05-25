@@ -18,18 +18,64 @@
 // const path = require('path');
 
 // const getpath = path.join('/content', 'subfolder', 'txt.txt');
-
-// console.log(getpath);
 const http = require('http');
-const port = 5000;
 
 const server = http.createServer((req, res) => {
-    console.log(req);
-    res.write('Welcome to our Home Page');
-    res.end();
+    if (req === '/') {
+        res.end('Home Page');
+    }
 
+    if (req.url === '/About') {
+        res.end('About Page')
+    }
+    res.end('Error Page');
 })
 
-server.listen(port, () => {
-    console.log('server listening on', port);
+
+server.listen(5000, () => {
+    console.log('server is listening on 5000....');
 })
+
+
+const { readFile } = require('fs');
+
+readFile('./content/subfolder/first.txt', (err, data) => {
+    if (err) {
+        return;
+    } else {
+        console.log(data);
+    }
+})
+
+const getText = (path) => {
+    return new Promise((resolve, reject) => {
+        readFile(path, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        })
+
+    })
+}
+
+// getText('./content/subfolder/first.txt').then((result) => {
+//     console.log(result);
+// }).catch((err) => {
+//     console.log(err);
+// })
+
+const start = async() => {
+    try {
+        const first = await getText('./content/subfolder/second.txt');
+        console.log(first);
+    } catch (err) {
+        console.log(err);
+
+    }
+
+
+}
+
+start();
